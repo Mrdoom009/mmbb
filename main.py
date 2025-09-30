@@ -434,7 +434,7 @@ async def txt_handler(bot: Client, m: Message):
                 #cmd = f'yt-dlp --cookies youtube_cookies.txt -f "{ytf}" "{url}" -o "{name}".mp4'
 
             else:
-                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
+                cmd = f'yt-dlp --add-header "Referer: https://player.akamai.net.in" -f "{ytf}" "{url}" -o "{name}.mp4"'
 
             try:  
                 cc = f'•——— `{a_name}` ———•\n\n[——— ✨ {str(count).zfill(3)} ✨ ———]({link0})\n\n🎞️𝐓𝐢𝐭𝐥𝐞 » `{name1} [{res}] .mp4`\n\n<pre><code>📚 Course : {b_name}</code></pre>\n\n🌟𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲 » `{CR}`\n'
@@ -476,7 +476,10 @@ async def txt_handler(bot: Client, m: Message):
                         await asyncio.sleep(4)
                         url = url.replace(" ", "%20")
                         scraper = cloudscraper.create_scraper()
-                        response = scraper.get(url)
+                        headers = {
+                            "Referer": "https://appx-play.akamai.net.in/"
+                        }
+                        response = scraper.get(url, headers=headers)
                         if response.status_code == 200:
                             with open(f'{name}.pdf', 'wb') as file:
                                 file.write(response.content)
@@ -494,7 +497,7 @@ async def txt_handler(bot: Client, m: Message):
 
                 elif ".pdf" in url:
                     try:
-                        cmd = f'yt-dlp -o "{name}.pdf" "{url}"'
+                        cmd = f'yt-dlp -o "{name}.pdf" --add-header "Referer: https://player.akamai.net.in" "{url}"'
                         download_cmd = f"{cmd} -R 25 --fragment-retries 25"
                         os.system(download_cmd)
                         copy = await bot.send_document(chat_id=m.chat.id, document=f'{name}.pdf', caption=cc1)
